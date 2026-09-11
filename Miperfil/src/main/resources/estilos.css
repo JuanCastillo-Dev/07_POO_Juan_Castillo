@@ -1,0 +1,64 @@
+/* Estilo del fondo de la ventana con un degradado enérgico */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #0F2027, #203A43, #2C5364);
+    -fx-padding: 30;
+}
+
+/* Título Principal */
+.titulo-perfil {
+    -fx-font-family: 'Segoe UI', Arial;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* Campos de texto y ComboBox */
+.text-field, .combo-box {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #E2E8F0;
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 8;
+    -fx-font-size: 13px;
+}
+
+/* Estilo específico para cuando despliegas el ComboBox */
+.combo-box .list-cell {
+    -fx-text-fill: #2C5364;
+}
+
+/* Botón Mostrar Perfil (Color Cyan Brillante) */
+.btn-mostrar {
+    -fx-background-color: #00D2FF;
+    -fx-text-fill: #00223E;
+    -fx-background-radius: 8;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+/* Botón Limpiar (Translúcido elegante) */
+.btn-limpiar {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 8;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255,255,255,0.4);
+    -fx-border-radius: 8;
+}
+
+/* Cuadro de resultados estilo cristal */
+.label-resultado {
+    -fx-font-family: 'Segoe UI', Arial;
+    -fx-font-size: 14px;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+    -fx-border-radius: 10;
+}
