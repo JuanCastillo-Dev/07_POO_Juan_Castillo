@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="450.0" prefWidth="750.0" style="-fx-background-color: #1a1e29;" xmlns="http://javafx.com" xmlns:fx="http://javafx.com" fx:controller="vallegrande.edu.pe.mysqlprueba.controller.MainController">
+    <children>
+        <Text fill="WHITE" layoutX="30.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LISTADO DE MENSAJES - FORMULARIO DE CONTACTO">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Text>
+        <TableView fx:id="tableCitas" layoutX="30.0" layoutY="70.0" prefHeight="340.0" prefWidth="690.0" style="-fx-background-color: #242936;">
+            <columns>
+                <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="colNombre" prefWidth="150.0" text="Nombre" />
+                <TableColumn fx:id="colCorreo" prefWidth="150.0" text="Correo" />
+                <TableColumn fx:id="colTelefono" prefWidth="100.0" text="Teléfono" />
+                <TableColumn fx:id="colMensaje" prefWidth="238.0" text="Mensaje" />
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>
