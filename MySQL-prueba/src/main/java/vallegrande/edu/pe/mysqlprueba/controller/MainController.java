@@ -3,14 +3,24 @@ package vallegrande.edu.pe.mysqlprueba.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import vallegrande.edu.pe.mysqlprueba.model.Mensaje;
 import vallegrande.edu.pe.mysqlprueba.model.MensajeDAO;
 
 public class MainController {
-    @FXML private TableView<Mensaje> tableCitas; // Mantiene el ID que mapea con tu vista
+    // Componentes del Formulario de Captura para APARC
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtCorreo;
+    @FXML private TextField txtTelefono;
+    @FXML private TextField txtMensaje;
+    @FXML private Button btnRegistrar;
+
+    // Componentes de la Tabla
+    @FXML private TableView<Mensaje> tableCitas;
     @FXML private TableColumn<Mensaje, Integer> colId;
     @FXML private TableColumn<Mensaje, String> colNombre;
     @FXML private TableColumn<Mensaje, String> colCorreo;
@@ -21,7 +31,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        // Enlaza cada columna del TableView con los atributos de tu clase Mensaje
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
@@ -32,8 +41,43 @@ public class MainController {
     }
 
     public void cargarDatos() {
-        // Trae la lista desde la BD en Docker y la inyecta en la tabla
         ObservableList<Mensaje> datos = FXCollections.observableArrayList(mensajeDAO.listarMensajes());
         tableCitas.setItems(datos);
+    }
+
+    // Acción del botón Registrar exigido en la S10
+    @FXML
+    public void onRegistrarAction() {
+        String nombre = txtNombre.getText();
+        String correo = txtCorreo.getText();
+        String telefono = txtTelefono.getText();
+        String mensajeTexto = txtMensaje.getText();
+
+        // Validación para que no manden campos vacíos
+        if (nombre.isEmpty() || correo.isEmpty() || mensajeTexto.isEmpty()) {
+            System.out.println("Por favor complete los campos obligatorios.");
+            return;
+        }
+
+        // Instanciar entidad (S10)
+        Mensaje nuevoMensaje = new Mensaje(0, nombre, correo, telefono, mensajeTexto);
+
+        // Ejecutar inserción en el DAO
+        boolean exito = mensajeDAO.insertar(nuevoMensaje);
+
+        if (exito) {
+            System.out.println("Solicitud guardada en MySQL de forma permanente.");
+            cargarDatos(); // Sincroniza y refresca el TableView automáticamente
+            limpiarCampos();
+        } else {
+            System.out.println("Error al registrar en la BD.");
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombre.clear();
+        txtCorreo.clear();
+        txtTelefono.clear();
+        txtMensaje.clear();
     }
 }

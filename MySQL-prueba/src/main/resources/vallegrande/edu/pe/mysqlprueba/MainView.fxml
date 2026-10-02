@@ -1,25 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="450.0" prefWidth="750.0" style="-fx-background-color: #1a1e29;" xmlns="http://javafx.com" xmlns:fx="http://javafx.com" fx:controller="vallegrande.edu.pe.mysqlprueba.controller.MainController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #1a1e29;" xmlns="http://javafx.com" xmlns:fx="http://javafx.com" fx:controller="vallegrande.edu.pe.mysqlprueba.controller.MainController">
     <children>
-        <Text fill="WHITE" layoutX="30.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LISTADO DE MENSAJES - FORMULARIO DE CONTACTO">
+        <Text fill="WHITE" layoutX="30.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="APARC - REGISTRO DE SOLICITUDES COMERCIALES (MAYORISTAS DE UVA)">
             <font>
-                <Font name="System Bold" size="18.0" />
+                <Font name="System Bold" size="16.0" />
             </font>
         </Text>
-        <TableView fx:id="tableCitas" layoutX="30.0" layoutY="70.0" prefHeight="340.0" prefWidth="690.0" style="-fx-background-color: #242936;">
+
+        <!-- Formulario de Captura de Datos -->
+        <VBox layoutX="30.0" layoutY="60.0" prefWidth="740.0" spacing="10.0">
+            <children>
+                <HBox spacing="15.0">
+                    <children>
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Nombre del Cliente / Empresa:" textFill="WHITE" />
+                                <TextField fx:id="txtNombre" promptText="Ej. Distribuidora Ica" style="-fx-background-color: #242936; -fx-text-fill: white;" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Correo Electrónico:" textFill="WHITE" />
+                                <TextField fx:id="txtCorreo" promptText="ejemplo@correo.com" style="-fx-background-color: #242936; -fx-text-fill: white;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <HBox spacing="15.0">
+                    <children>
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Teléfono de Contacto:" textFill="WHITE" />
+                                <TextField fx:id="txtTelefono" promptText="999999999" style="-fx-background-color: #242936; -fx-text-fill: white;" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Detalle del Pedido de Uva:" textFill="WHITE" />
+                                <TextField fx:id="txtMensaje" promptText="Cantidad de jabas, variedad, etc." style="-fx-background-color: #242936; -fx-text-fill: white;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#onRegistrarAction" prefWidth="740.0" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="[ REGISTRAR SOLICITUD ]" />
+            </children>
+        </VBox>
+
+        <!-- Tabla de Visualización de Datos -->
+        <TableView fx:id="tableCitas" layoutX="30.0" layoutY="240.0" prefHeight="330.0" prefWidth="740.0" style="-fx-background-color: #242936;">
             <columns>
                 <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
-                <TableColumn fx:id="colNombre" prefWidth="150.0" text="Nombre" />
-                <TableColumn fx:id="colCorreo" prefWidth="150.0" text="Correo" />
+                <TableColumn fx:id="colNombre" prefWidth="160.0" text="Cliente / Empresa" />
+                <TableColumn fx:id="colCorreo" prefWidth="160.0" text="Correo" />
                 <TableColumn fx:id="colTelefono" prefWidth="100.0" text="Teléfono" />
-                <TableColumn fx:id="colMensaje" prefWidth="238.0" text="Mensaje" />
+                <TableColumn fx:id="colMensaje" prefWidth="268.0" text="Detalle del Pedido" />
             </columns>
         </TableView>
     </children>
