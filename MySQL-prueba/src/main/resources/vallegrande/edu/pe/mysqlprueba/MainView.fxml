@@ -56,7 +56,14 @@
                     </children>
                 </HBox>
 
-                <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#onRegistrarAction" prefWidth="740.0" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="[ REGISTRAR SOLICITUD ]" />
+                <!-- MEJORA S11: Barra de Botones de Operaciones de Datos -->
+                <HBox spacing="10.0" prefWidth="740.0">
+                    <children>
+                        <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#onRegistrarAction" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="[ REGISTRAR ]" />
+                        <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#onActualizarAction" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold;" text="[ ACTUALIZAR ]" />
+                        <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#onEliminarAction" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold;" text="[ ELIMINAR ]" />
+                    </children>
+                </HBox>
             </children>
         </VBox>
 

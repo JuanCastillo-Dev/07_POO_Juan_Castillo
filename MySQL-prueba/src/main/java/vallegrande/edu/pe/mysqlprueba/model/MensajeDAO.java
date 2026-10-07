@@ -53,4 +53,44 @@ public class MensajeDAO {
             return false;
         }
     }
+
+    // MEJORA S11: Método para actualizar un registro existente usando SQL UPDATE
+    public boolean actualizar(Mensaje mensaje) {
+        String sql = "UPDATE mensajes SET nombre = ?, correo = ?, telefono = ?, mensaje = ? WHERE id = ?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, mensaje.getNombre());
+            ps.setString(2, mensaje.getCorreo());
+            ps.setString(3, mensaje.getTelefono());
+            ps.setString(4, mensaje.getMensaje());
+            ps.setInt(5, mensaje.getId()); // Cláusula WHERE obligatoria para no alterar toda la tabla
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // MEJORA S11: Método para eliminar un registro de forma segura usando SQL DELETE
+    public boolean eliminar(int id) {
+        String sql = "DELETE FROM mensajes WHERE id = ?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id); // Identificador único para el borrado seguro
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

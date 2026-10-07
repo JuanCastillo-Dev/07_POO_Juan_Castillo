@@ -29,6 +29,9 @@ public class MainController {
 
     private final MensajeDAO mensajeDAO = new MensajeDAO();
 
+    // Almacenar la referencia del objeto seleccionado en la tabla
+    private Mensaje mensajeSeleccionado;
+
     @FXML
     public void initialize() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -36,6 +39,17 @@ public class MainController {
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colMensaje.setCellValueFactory(new PropertyValueFactory<>("mensaje"));
+
+        // MEJORA S11: Escuchador para detectar clics en la tabla y cargar los campos de texto
+        tableCitas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                mensajeSeleccionado = newSelection;
+                txtNombre.setText(mensajeSeleccionado.getNombre());
+                txtCorreo.setText(mensajeSeleccionado.getCorreo());
+                txtTelefono.setText(mensajeSeleccionado.getTelefono());
+                txtMensaje.setText(mensajeSeleccionado.getMensaje());
+            }
+        });
 
         cargarDatos();
     }
@@ -53,24 +67,74 @@ public class MainController {
         String telefono = txtTelefono.getText();
         String mensajeTexto = txtMensaje.getText();
 
-        // Validación para que no manden campos vacíos
         if (nombre.isEmpty() || correo.isEmpty() || mensajeTexto.isEmpty()) {
             System.out.println("Por favor complete los campos obligatorios.");
             return;
         }
 
-        // Instanciar entidad (S10)
         Mensaje nuevoMensaje = new Mensaje(0, nombre, correo, telefono, mensajeTexto);
-
-        // Ejecutar inserción en el DAO
         boolean exito = mensajeDAO.insertar(nuevoMensaje);
 
         if (exito) {
             System.out.println("Solicitud guardada en MySQL de forma permanente.");
-            cargarDatos(); // Sincroniza y refresca el TableView automáticamente
+            cargarDatos();
             limpiarCampos();
         } else {
             System.out.println("Error al registrar en la BD.");
+        }
+    }
+
+    // Acción del botón Actualizar
+    @FXML
+    public void onActualizarAction() {
+        if (mensajeSeleccionado == null) {
+            System.out.println("Por favor, seleccione una fila de la tabla primero.");
+            return;
+        }
+
+        String nombre = txtNombre.getText();
+        String correo = txtCorreo.getText();
+        String telefono = txtTelefono.getText();
+        String mensajeTexto = txtMensaje.getText();
+
+        if (nombre.isEmpty() || correo.isEmpty() || mensajeTexto.isEmpty()) {
+            System.out.println("Por favor complete los campos obligatorios.");
+            return;
+        }
+
+        // Modificar los atributos del objeto seleccionado
+        mensajeSeleccionado.setNombre(nombre);
+        mensajeSeleccionado.setCorreo(correo);
+        mensajeSeleccionado.setTelefono(telefono);
+        mensajeSeleccionado.setMensaje(mensajeTexto);
+
+        boolean exito = mensajeDAO.actualizar(mensajeSeleccionado);
+
+        if (exito) {
+            System.out.println("Registro modificado en MySQL con éxito.");
+            cargarDatos(); // Sincroniza la tabla de inmediato
+            limpiarCampos();
+        } else {
+            System.out.println("Error al actualizar el registro.");
+        }
+    }
+
+    // MEJORA S11: Acción del botón Eliminar
+    @FXML
+    public void onEliminarAction() {
+        if (mensajeSeleccionado == null) {
+            System.out.println("Por favor, seleccione una fila de la tabla primero.");
+            return;
+        }
+
+        boolean exito = mensajeDAO.eliminar(mensajeSeleccionado.getId());
+
+        if (exito) {
+            System.out.println("Registro borrado de MySQL de forma segura.");
+            cargarDatos(); // Sincroniza la tabla de inmediato
+            limpiarCampos();
+        } else {
+            System.out.println("Error al eliminar el registro.");
         }
     }
 
@@ -79,5 +143,7 @@ public class MainController {
         txtCorreo.clear();
         txtTelefono.clear();
         txtMensaje.clear();
+        mensajeSeleccionado = null; // Quita la selección activa
+        tableCitas.getSelectionModel().clearSelection(); // Deselecciona visualmente en la tabla
     }
 }
