@@ -8,142 +8,144 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import vallegrande.edu.pe.mysqlprueba.model.Mensaje;
-import vallegrande.edu.pe.mysqlprueba.model.MensajeDAO;
+import vallegrande.edu.pe.mysqlprueba.model.Productor;
+import vallegrande.edu.pe.mysqlprueba.model.ProductorDAO;
 
 public class MainController {
-    // Componentes del Formulario de Captura para APARC
+
+    // Componentes del Formulario de Captura (Opción 1: Productores)
     @FXML private TextField txtNombre;
-    @FXML private TextField txtCorreo;
+    @FXML private TextField txtDni;
     @FXML private TextField txtTelefono;
-    @FXML private TextField txtMensaje;
+    @FXML private TextField txtComunidad;
     @FXML private Button btnRegistrar;
+    @FXML private Button btnActualizar;
+    @FXML private Button btnEliminar;
 
-    // Componentes de la Tabla
-    @FXML private TableView<Mensaje> tableCitas;
-    @FXML private TableColumn<Mensaje, Integer> colId;
-    @FXML private TableColumn<Mensaje, String> colNombre;
-    @FXML private TableColumn<Mensaje, String> colCorreo;
-    @FXML private TableColumn<Mensaje, String> colTelefono;
-    @FXML private TableColumn<Mensaje, String> colMensaje;
+    // Componentes de la Tabla de Productores
+    @FXML private TableView<Productor> tableCitas; // Mantenemos el fx:id para no romper el FXML
+    @FXML private TableColumn<Productor, Integer> colId;
+    @FXML private TableColumn<Productor, String> colNombre;
+    @FXML private TableColumn<Productor, String> colDni;
+    @FXML private TableColumn<Productor, String> colTelefono;
+    @FXML private TableColumn<Productor, String> colComunidad;
 
-    private final MensajeDAO mensajeDAO = new MensajeDAO();
-
-    // Almacenar la referencia del objeto seleccionado en la tabla
-    private Mensaje mensajeSeleccionado;
+    private final ProductorDAO productorDAO = new ProductorDAO();
+    private Productor productorSeleccionado;
 
     @FXML
     public void initialize() {
+        // Vincular las columnas de la tabla con los atributos de Productor
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
+        colDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
-        colMensaje.setCellValueFactory(new PropertyValueFactory<>("mensaje"));
+        colComunidad.setCellValueFactory(new PropertyValueFactory<>("comunidad"));
 
-        // MEJORA S11: Escuchador para detectar clics en la tabla y cargar los campos de texto
+        // Escuchador para detectar selección en la tabla y cargar el formulario de edición
         tableCitas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                mensajeSeleccionado = newSelection;
-                txtNombre.setText(mensajeSeleccionado.getNombre());
-                txtCorreo.setText(mensajeSeleccionado.getCorreo());
-                txtTelefono.setText(mensajeSeleccionado.getTelefono());
-                txtMensaje.setText(mensajeSeleccionado.getMensaje());
+                productorSeleccionado = newSelection;
+                txtNombre.setText(productorSeleccionado.getNombre());
+                txtDni.setText(productorSeleccionado.getDni());
+                txtTelefono.setText(productorSeleccionado.getTelefono());
+                txtComunidad.setText(productorSeleccionado.getComunidad());
             }
         });
 
         cargarDatos();
     }
 
+    // 2. LISTAR: Cargar datos desde MySQL hacia la TableView
     public void cargarDatos() {
-        ObservableList<Mensaje> datos = FXCollections.observableArrayList(mensajeDAO.listarMensajes());
+        ObservableList<Productor> datos = FXCollections.observableArrayList(productorDAO.listarProductores());
         tableCitas.setItems(datos);
     }
 
-    // Acción del botón Registrar exigido en la S10
+    // 1. REGISTRAR: Insertar un nuevo productor en la base de datos
     @FXML
     public void onRegistrarAction() {
         String nombre = txtNombre.getText();
-        String correo = txtCorreo.getText();
+        String dni = txtDni.getText();
         String telefono = txtTelefono.getText();
-        String mensajeTexto = txtMensaje.getText();
+        String comunidad = txtComunidad.getText();
 
-        if (nombre.isEmpty() || correo.isEmpty() || mensajeTexto.isEmpty()) {
+        if (nombre.isEmpty() || dni.isEmpty() || comunidad.isEmpty()) {
             System.out.println("Por favor complete los campos obligatorios.");
             return;
         }
 
-        Mensaje nuevoMensaje = new Mensaje(0, nombre, correo, telefono, mensajeTexto);
-        boolean exito = mensajeDAO.insertar(nuevoMensaje);
+        Productor nuevoProductor = new Productor(0, nombre, dni, telefono, comunidad);
+        boolean exito = productorDAO.insertar(nuevoProductor);
 
         if (exito) {
-            System.out.println("Solicitud guardada en MySQL de forma permanente.");
+            System.out.println("Productor registrado en MySQL correctamente.");
             cargarDatos();
             limpiarCampos();
         } else {
-            System.out.println("Error al registrar en la BD.");
+            System.out.println("Error al registrar el productor.");
         }
     }
 
-    // Acción del botón Actualizar
+    // 3. EDITAR: Modificar los datos del productor seleccionado
     @FXML
     public void onActualizarAction() {
-        if (mensajeSeleccionado == null) {
-            System.out.println("Por favor, seleccione una fila de la tabla primero.");
+        if (productorSeleccionado == null) {
+            System.out.println("Por favor, seleccione un productor de la tabla primero.");
             return;
         }
 
         String nombre = txtNombre.getText();
-        String correo = txtCorreo.getText();
+        String dni = txtDni.getText();
         String telefono = txtTelefono.getText();
-        String mensajeTexto = txtMensaje.getText();
+        String comunidad = txtComunidad.getText();
 
-        if (nombre.isEmpty() || correo.isEmpty() || mensajeTexto.isEmpty()) {
+        if (nombre.isEmpty() || dni.isEmpty() || comunidad.isEmpty()) {
             System.out.println("Por favor complete los campos obligatorios.");
             return;
         }
 
-        // Modificar los atributos del objeto seleccionado
-        mensajeSeleccionado.setNombre(nombre);
-        mensajeSeleccionado.setCorreo(correo);
-        mensajeSeleccionado.setTelefono(telefono);
-        mensajeSeleccionado.setMensaje(mensajeTexto);
+        productorSeleccionado.setNombre(nombre);
+        productorSeleccionado.setDni(dni);
+        productorSeleccionado.setTelefono(telefono);
+        productorSeleccionado.setComunidad(comunidad);
 
-        boolean exito = mensajeDAO.actualizar(mensajeSeleccionado);
+        boolean exito = productorDAO.actualizar(productorSeleccionado);
 
         if (exito) {
-            System.out.println("Registro modificado en MySQL con éxito.");
-            cargarDatos(); // Sincroniza la tabla de inmediato
+            System.out.println("Productor actualizado en MySQL con éxito.");
+            cargarDatos();
             limpiarCampos();
         } else {
-            System.out.println("Error al actualizar el registro.");
+            System.out.println("Error al actualizar el productor.");
         }
     }
 
-    // MEJORA S11: Acción del botón Eliminar
+    // 4. ELIMINAR: Remover de forma permanente el productor seleccionado
     @FXML
     public void onEliminarAction() {
-        if (mensajeSeleccionado == null) {
-            System.out.println("Por favor, seleccione una fila de la tabla primero.");
+        if (productorSeleccionado == null) {
+            System.out.println("Por favor, seleccione un productor de la tabla primero.");
             return;
         }
 
-        boolean exito = mensajeDAO.eliminar(mensajeSeleccionado.getId());
+        boolean exito = productorDAO.eliminar(productorSeleccionado.getId());
 
         if (exito) {
-            System.out.println("Registro borrado de MySQL de forma segura.");
-            cargarDatos(); // Sincroniza la tabla de inmediato
+            System.out.println("Productor eliminado de MySQL con éxito.");
+            cargarDatos();
             limpiarCampos();
         } else {
-            System.out.println("Error al eliminar el registro.");
+            System.out.println("Error al eliminar el productor.");
         }
     }
 
     private void limpiarCampos() {
         txtNombre.clear();
-        txtCorreo.clear();
+        txtDni.clear();
         txtTelefono.clear();
-        txtMensaje.clear();
-        mensajeSeleccionado = null; // Quita la selección activa
-        tableCitas.getSelectionModel().clearSelection(); // Deselecciona visualmente en la tabla
+        txtComunidad.clear();
+        productorSeleccionado = null;
+        tableCitas.getSelectionModel().clearSelection();
     }
 }
